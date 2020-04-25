@@ -192,19 +192,20 @@ def random_hill_climb(problem, max_attempts=10, max_iters=np.inf, restarts=0,
 
         while (attempts < max_attempts) and (iters < max_iters):
             iters += 1
+            attempts += 1
 
             # Find random neighbor and evaluate fitness
             next_state = problem.random_neighbor()
             next_fitness = problem.eval_fitness(next_state)
 
-            # If best neighbor is an improvement,
-            # move to that state and reset attempts counter
-            if next_fitness > problem.get_fitness():
-                problem.set_state(next_state)
-                attempts = 0
+            improvement = next_fitness - problem.get_fitness()
 
-            else:
-                attempts += 1
+            # If the neighbor is better or equal move to that state
+            if improvement >= 0:
+                problem.set_state(next_state)
+                # if better than reset attempts counter
+                if improvement > 0: 
+                    attempts = 0
 
             if curve:
                 fitness_curve.append(problem.get_fitness())
